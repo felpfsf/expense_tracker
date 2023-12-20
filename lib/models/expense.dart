@@ -23,7 +23,7 @@ const categoryIcons = {
 class Expense {
   final String id;
   final String title;
-  final double amount;
+  final double cost;
   final DateTime createdAt;
   final Category category;
 
@@ -33,7 +33,7 @@ class Expense {
 
   Expense({
     required this.title,
-    required this.amount,
+    required this.cost,
     required this.category,
     required this.createdAt,
   }) : id = uuid.v4();
