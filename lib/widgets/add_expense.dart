@@ -161,16 +161,15 @@ class _AddExpense extends State<AddExpense> {
           Row(
             children: [
               const Spacer(),
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: _onCloseModal,
-                icon: const Icon(Icons.cancel_outlined),
-                label: const ExptText(text: 'Cancel'),
+                child: const ExptText(text: 'Cancel', fontWeight: FontWeight.w500,),
               ),
               const SizedBox(width: 8),
               ElevatedButton.icon(
                 onPressed: _handleSaveExpense,
                 icon: const Icon(Icons.save_outlined),
-                label: const ExptText(text: 'Save'),
+                label: const ExptText(text: 'Save', fontWeight: FontWeight.w500,),
               ),
             ],
           ),

@@ -12,33 +12,34 @@ class ExpensesApp extends StatefulWidget {
 }
 
 class _ExpensesApp extends State<ExpensesApp> {
-  // final List<Expense> _registeredExpenses = [
-  //   Expense(
-  //     title: 'Flutter Course',
-  //     cost: 19.99,
-  //     category: Category.work,
-  //     createdAt: DateTime.now(),
-  //   ),
-  //   Expense(
-  //     title: 'Oppenheimer',
-  //     cost: 4.99,
-  //     category: Category.leisure,
-  //     createdAt: DateTime.now(),
-  //   ),
-  //   Expense(
-  //     title: 'Dinner @ Fogo de Chão',
-  //     cost: 234.45,
-  //     category: Category.food,
-  //     createdAt: DateTime.now(),
-  //   ),
-  //   Expense(
-  //     title: 'Traveling',
-  //     cost: 136.45,
-  //     category: Category.travel,
-  //     createdAt: DateTime.now(),
-  //   ),
-  // ];
-  final List<Expense> _registeredExpenses = [];
+  final List<Expense> _registeredExpenses = [
+    Expense(
+      title: 'Flutter Course',
+      cost: 19.99,
+      category: Category.work,
+      createdAt: DateTime.now(),
+    ),
+    Expense(
+      title: 'Oppenheimer',
+      cost: 4.99,
+      category: Category.leisure,
+      createdAt: DateTime.now(),
+    ),
+    Expense(
+      title: 'Dinner @ Fogo de Chão',
+      cost: 234.45,
+      category: Category.food,
+      createdAt: DateTime.now(),
+    ),
+    Expense(
+      title: 'Traveling',
+      cost: 136.45,
+      category: Category.travel,
+      createdAt: DateTime.now(),
+    ),
+  ];
+  // final List<Expense> _registeredExpenses = [];
+  final String _appTitle = 'Flutter Expense Tracker';
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
@@ -109,14 +110,19 @@ class _ExpensesApp extends State<ExpensesApp> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter ExpenseTracker'),
+        title: Text(
+          _appTitle,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: _openAddExpenseOverlay,
             icon: const Icon(Icons.add),
           ),
         ],
-        backgroundColor: Colors.amber,
         toolbarHeight: 80,
       ),
       body: Column(
@@ -134,7 +140,8 @@ class _ExpensesApp extends State<ExpensesApp> {
 }
 
 class TitleSection extends StatelessWidget {
-  const TitleSection({super.key});
+  final void Function() openAddExpenseOverlay;
+  const TitleSection({super.key, required this.openAddExpenseOverlay});
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +155,7 @@ class TitleSection extends StatelessWidget {
         ),
         const Spacer(),
         IconButton(
-          onPressed: () {},
+          onPressed: openAddExpenseOverlay,
           icon: const Icon(Icons.add),
         ),
       ],

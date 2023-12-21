@@ -10,7 +10,7 @@ class ExptText extends StatelessWidget {
   const ExptText({
     super.key,
     required this.text,
-    this.fontWeight = FontWeight.w300,
+    this.fontWeight = FontWeight.w400,
     this.fontSize = 16,
     this.color = Colors.black,
     this.textAlign = TextAlign.left,
