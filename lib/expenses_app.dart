@@ -52,12 +52,43 @@ class _ExpensesApp extends State<ExpensesApp> {
     setState(() {
       _registeredExpenses.add(expense);
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 3),
+        content: ExptText(text: 'Expense created'),
+        backgroundColor: Colors.white,
+        padding: EdgeInsets.all(16),
+      ),
+    );
   }
 
   void _deleteExpense(Expense expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        action: SnackBarAction(
+          textColor: Colors.black,
+          backgroundColor: Colors.amber,
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        content: const ExptText(
+          text: 'Expense deleted',
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
   }
 
   @override
