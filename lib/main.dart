@@ -12,6 +12,16 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
+  // This will lock the orientation of the screen app
+  // not adjusting the screen orientation of the device
+  // In sum the screen will not adjust the screen if the device is in landscape
+  // the user will be 'forced' to use the app on portrait orientation / as intended
+
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((fn) {
+
   runApp(MaterialApp(
     darkTheme: ThemeData.dark().copyWith(
       colorScheme: kDarkColorScheme,
@@ -63,4 +73,6 @@ void main() {
     themeMode: ThemeMode.system,
     home: const ExpensesApp(),
   ));
+
+  // });
 }

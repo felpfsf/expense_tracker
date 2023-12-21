@@ -95,6 +95,7 @@ class _ExpensesApp extends State<ExpensesApp> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     Widget emptyState = const Center(
       child: ExptText(
         text: 'No expenses found. \n Start adding some !',
@@ -108,6 +109,8 @@ class _ExpensesApp extends State<ExpensesApp> {
       expenses: _registeredExpenses,
       onDeleteExpense: _deleteExpense,
     );
+
+    final content = _registeredExpenses.isNotEmpty ? mainContent : emptyState;
 
     return Scaffold(
       appBar: AppBar(
@@ -126,16 +129,27 @@ class _ExpensesApp extends State<ExpensesApp> {
         ],
         toolbarHeight: 80,
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          // Since we are using column we need to add a expanded widget to display
-          // the list
-          Expanded(
-            child: _registeredExpenses.isNotEmpty ? mainContent : emptyState,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                // Since we are using column we need to add a expanded widget to display
+                // the list
+                Expanded(
+                  child: content,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                // Since we are using column we need to add a expanded widget to display
+                // the list
+                Expanded(
+                  child: content,
+                ),
+              ],
+            ),
     );
   }
 }
