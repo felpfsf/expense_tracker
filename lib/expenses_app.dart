@@ -12,32 +12,33 @@ class ExpensesApp extends StatefulWidget {
 }
 
 class _ExpensesApp extends State<ExpensesApp> {
-  final List<Expense> _registeredExpenses = [
-    Expense(
-      title: 'Flutter Course',
-      cost: 19.99,
-      category: Category.work,
-      createdAt: DateTime.now(),
-    ),
-    Expense(
-      title: 'Oppenheimer',
-      cost: 4.99,
-      category: Category.leisure,
-      createdAt: DateTime.now(),
-    ),
-    Expense(
-      title: 'Dinner @ Fogo de Chão',
-      cost: 234.45,
-      category: Category.food,
-      createdAt: DateTime.now(),
-    ),
-    Expense(
-      title: 'Traveling',
-      cost: 136.45,
-      category: Category.travel,
-      createdAt: DateTime.now(),
-    ),
-  ];
+  // final List<Expense> _registeredExpenses = [
+  //   Expense(
+  //     title: 'Flutter Course',
+  //     cost: 19.99,
+  //     category: Category.work,
+  //     createdAt: DateTime.now(),
+  //   ),
+  //   Expense(
+  //     title: 'Oppenheimer',
+  //     cost: 4.99,
+  //     category: Category.leisure,
+  //     createdAt: DateTime.now(),
+  //   ),
+  //   Expense(
+  //     title: 'Dinner @ Fogo de Chão',
+  //     cost: 234.45,
+  //     category: Category.food,
+  //     createdAt: DateTime.now(),
+  //   ),
+  //   Expense(
+  //     title: 'Traveling',
+  //     cost: 136.45,
+  //     category: Category.travel,
+  //     createdAt: DateTime.now(),
+  //   ),
+  // ];
+  final List<Expense> _registeredExpenses = [];
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
@@ -53,8 +54,28 @@ class _ExpensesApp extends State<ExpensesApp> {
     });
   }
 
+  void _deleteExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget emptyState = const Center(
+      child: ExptText(
+        text: 'No expenses found. \n Start adding some !',
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    Widget mainContent = ExpensesList(
+      expenses: _registeredExpenses,
+      onDeleteExpense: _deleteExpense,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -73,7 +94,7 @@ class _ExpensesApp extends State<ExpensesApp> {
           // Since we are using column we need to add a expanded widget to display
           // the list
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: _registeredExpenses.isNotEmpty ? mainContent : emptyState,
           ),
         ],
       ),
