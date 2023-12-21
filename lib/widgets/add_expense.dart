@@ -4,28 +4,75 @@ import 'package:expense_tracker/widgets/shared/expt_text_field.dart';
 import 'package:flutter/material.dart';
 
 class AddExpense extends StatefulWidget {
-  const AddExpense({super.key});
+  final void Function(Expense expense) onAddExpense;
+
+  const AddExpense({
+    super.key,
+    required this.onAddExpense,
+  });
 
   @override
   State<AddExpense> createState() => _AddExpense();
 }
 
 class _AddExpense extends State<AddExpense> {
-  final TextEditingController _titleController =
-      TextEditingController(text: '');
-
-  final TextEditingController _amountController =
-      TextEditingController(text: '');
-
+  final _titleController = TextEditingController(text: '');
+  final _costController = TextEditingController(text: '');
   DateTime? _selectedDate;
+  Category _selectedCategory = Category.food;
 
   void _handleSaveExpense() {
+    final enteredCost = double.tryParse(_costController.text);
+    final isCostInvalid = enteredCost == null || enteredCost <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        isCostInvalid ||
+        _selectedDate == null) {
+      // error message
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const ExptText(
+            text: 'Invalid input',
+            fontSize: 20,
+            color: Colors.redAccent,
+            fontWeight: FontWeight.w600,
+          ),
+          content: const ExptText(
+            text: 'Please make sure to fill all inputs.',
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    widget.onAddExpense(
+      Expense(
+        title: _titleController.text,
+        cost: enteredCost,
+        category: _selectedCategory,
+        createdAt: _selectedDate!,
+      ),
+    );
+
     debugPrint(
-        'title => ${_titleController.text} \n cost => ${_amountController.text} \n createdAt => ${formatter.format(_selectedDate!)}');
+        'title => ${_titleController.text} \n cost => $enteredCost \n createdAt => ${formatter.format(_selectedDate!)} \n selectedCategory => ${_selectedCategory.name}');
+
+    _onCloseModal();
   }
 
-  void _handleCancelExpense() {
-    debugPrint('Cancel expense and close modal');
+  void _onCloseModal() {
+    debugPrint('Close modal');
     Navigator.pop(context);
   }
 
@@ -38,9 +85,16 @@ class _AddExpense extends State<AddExpense> {
       firstDate: firstDate,
       lastDate: now,
     );
-    // or use .the() after the showDatePicker()
+    // or use .then() after the showDatePicker()
     setState(() {
       _selectedDate = pickedDate;
+    });
+  }
+
+  void _handleSelectCategory(value) {
+    if (value == null) return;
+    setState(() {
+      _selectedCategory = value;
     });
   }
 
@@ -48,14 +102,14 @@ class _AddExpense extends State<AddExpense> {
   void dispose() {
     // clean memory from controllers, avoiding app crash
     _titleController.dispose();
-    _amountController.dispose();
+    _costController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 64, 16, 16),
       child: Column(
         children: [
           const ExptText(
@@ -69,7 +123,7 @@ class _AddExpense extends State<AddExpense> {
             hintText: 'Add a title for the expense',
           ),
           ExptTextField(
-            textEditingController: _amountController,
+            textEditingController: _costController,
             labelText: 'Cost',
             hintText: 'Add a cost amount for the expense',
             prefixText: '\$ ',
@@ -78,6 +132,21 @@ class _AddExpense extends State<AddExpense> {
           ),
           Row(
             children: [
+              DropdownButton(
+                value: _selectedCategory,
+                items: Category.values
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category,
+                        child: Text(
+                          category.name.toUpperCase(),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) => _handleSelectCategory(value),
+              ),
+              const Spacer(),
               ExptText(
                 text: _selectedDate != null
                     ? formatter.format(_selectedDate!)
@@ -93,7 +162,7 @@ class _AddExpense extends State<AddExpense> {
             children: [
               const Spacer(),
               ElevatedButton.icon(
-                onPressed: _handleCancelExpense,
+                onPressed: _onCloseModal,
                 icon: const Icon(Icons.cancel_outlined),
                 label: const ExptText(text: 'Cancel'),
               ),
