@@ -1,6 +1,6 @@
 # expense_tracker
 
-A new Flutter project.
+A new Flutter project developed during the Flutter & Dart course of Academind.
 
 ## Getting Started
 
